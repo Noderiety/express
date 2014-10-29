@@ -12,6 +12,7 @@ var gulp = require('gulp'),
     changed = require('gulp-changed'),
     sourcemaps = require('gulp-sourcemaps'),
     insert = require('gulp-insert'),
+    nodemon = require('gulp-nodemon'),
     rc = require('rc'),
     _ = require('lodash'),
     traceurConfig = _.omit(rc('traceur'), ['config', '_']),
@@ -123,6 +124,15 @@ gulp.task('traceur-test', function () {
     }))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(testDestDir));
+});
+
+// Currently broken, server EADDRINUSE
+gulp.task('nodemon', function () {
+  nodemon({ script: './index.js', ext: 'hbs js', ignore: ['ignored.js'] })
+    // .on('change', ['lint'])
+    .on('restart', function () {
+      console.log('restarted!');
+    });
 });
 
 // Watch the various files and runs their respective tasks

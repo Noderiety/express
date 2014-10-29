@@ -4,6 +4,7 @@ var config = {
       port: 3000,
     },
     database: {
+      type: 'mongo',
       url: 'mongodb://localhost/noderiety'
     }
   },
@@ -12,6 +13,7 @@ var config = {
       port: 3001
     },
     database: {
+      type: 'mongo',
       url: 'mongodb://localhost/noderiety'
     }
   },
@@ -20,6 +22,7 @@ var config = {
       port: 8080
     },
     database: {
+      type: 'mongo',
       url: 'mongodb://localhost/noderiety'
     }
   }

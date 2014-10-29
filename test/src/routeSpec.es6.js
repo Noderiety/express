@@ -1,4 +1,4 @@
-/*global describe, it*/
+/*global describe, it, before, beforeEach, after, afterEach*/
 let superagent = require('supertest'),
     _ = require('lodash'),
     app = require('../../index');
@@ -17,8 +17,9 @@ describe('Routes', () => {
         .expect(200, done);
     });
   });
+
   describe('GET /thread', () => {
-    it('should return 200', (done) => {
+    it('should return all threads', (done) => {
       request()
         .get('/thread')
         .expect('Content-Type', /json/)
@@ -28,13 +29,26 @@ describe('Routes', () => {
           thread.should.have.property('title');
           thread.should.have.property('author');
           thread.should.have.property('title');
-
         })
         .expect(200, done);
     });
   });
   describe('GET /thread/:title', () => {
-    it('should return 200', (done) => {
+    // let dbConnection;
+
+    before(() => {
+      // Setup your DB connection
+      // dbConnection = mongoose.connect(...)
+      console.log('before');
+    });
+    beforeEach(() => console.log('beforeEach'));
+    after(() => {
+      // dbConnection.close(done)
+      console.log('after');
+    });
+    afterEach(() => console.log('afterEach'));
+
+    it('should return a thread with the given title', (done) => {
       request()
         .get('/thread/Hello')
         .expect('Content-Type', /json/)
@@ -51,9 +65,8 @@ describe('Routes', () => {
             post.should.have.property('author');
             post.should.have.property('date');
           });
-
         })
-        .expect(200, done);
+        .expect(200);
     });
   });
 });

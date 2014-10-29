@@ -1,6 +1,13 @@
 var config = require('./config'),
     App = require('./server/lib/app'),
-    app = new App(config);
+    app = new App(config),
+    trycatch = require('trycatch');
+
+app.configureSync(config);
+
+if (process.env.NODE_ENV !== 'production') {
+	trycatch.configure({'long-stack-traces': true});
+}
 
 // For requiring from tests
 app.initialize()
@@ -9,4 +16,7 @@ app.initialize()
 	})
 	.done();
 
-module.exports = app;
+if (require.main !== module) {
+	module.exports = app;
+}
+

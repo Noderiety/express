@@ -10,12 +10,17 @@ let express = require('express'),
     compress = require('compression'),
     favicon = require('static-favicon'),
     methodOverride = require('method-override'),
-    errorHandler = require('errorhandler'),
     p = require('songbird'),
-    mongoDriver = require('./drivers/mongo'),
-    router = require('./middlewares/router');
+    router = require('./middlewares/router'),
+    trycatchMiddleware = require('./middlewares/trycatch'),
+    databaseDriver;
+
 
 class App {
+  configureSync(config) {
+    databaseDriver = require('./drivers/'+config.database.type);
+  }
+
   constructor (config) {
     let server = this.server = express();
 
@@ -47,6 +52,7 @@ class App {
     server.set('view engine', 'hbs');
 
     server
+      .use(trycatchMiddleware())
       .use(compress())
       .use(favicon())
       .use(logger('dev'))
@@ -57,15 +63,11 @@ class App {
       .use(function (req, res) {
         res.status(404).render('404', {title: 'Not Found :('});
       });
-
-    if (server.get('env') === 'development') {
-      server.use(errorHandler());
-    }
   }
 
   initialize() {
     return p.all([
-      mongoDriver.initialize(this.config.database),
+      databaseDriver.initialize(this.config.database),
       this.server.promise.listen(this.server.get('port'))
     ]);
   }
