@@ -14,15 +14,17 @@ var gulp = require('gulp'),
     insert = require('gulp-insert'),
     rc = require('rc'),
     _ = require('lodash'),
-    tracuerConfig = _.omit(rc('traceur'), ['config', '_']),
+    traceurConfig = _.omit(rc('traceur'), ['config', '_']),
     // srcDir = './server/',
     srcFiles = './server/src/**/*.es6.js',
     destDir = './server/lib/',
+    testSrcFiles = './test/src/**/*.es6.js',
+    testDestDir = './test/lib/',
     traceurStackTraceMapInjection = 'require(\'traceur-source-maps\').install(require(\'traceur\'));';
 
 // config to hold the path files
 var paths = {
-  server: ['./server/src/**/*.js', 'index.js', 'config.js'],
+  server: ['./server/src/**/*.js', './test/src/**/*.js', 'index.js', 'config.js'],
   client: ['./public/js/**/*.js', '!./public/js/**/*.min.js']
 };
 
@@ -100,7 +102,7 @@ gulp.task('traceur', function () {
     .pipe(changed(destDir))
     .pipe(insert.prepend(traceurStackTraceMapInjection))
     .pipe(sourcemaps.init())
-    .pipe(traceur(tracuerConfig))
+    .pipe(traceur(traceurConfig))
     .pipe(rename(function (path) {
       // Remove .es6 extension
       path.basename = path.basename.split('.').slice(0,-1).join('.');
@@ -109,9 +111,23 @@ gulp.task('traceur', function () {
     .pipe(gulp.dest(destDir));
 });
 
+gulp.task('traceur-test', function () {
+  return gulp.src(testSrcFiles)
+    .pipe(changed(testDestDir))
+    .pipe(insert.prepend(traceurStackTraceMapInjection))
+    .pipe(sourcemaps.init())
+    .pipe(traceur(traceurConfig))
+    .pipe(rename(function (path) {
+      // Remove .es6 extension
+      path.basename = path.basename.split('.').slice(0,-1).join('.');
+    }))
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest(testDestDir));
+});
+
 // Watch the various files and runs their respective tasks
 gulp.task('watch', function () {
-  gulp.watch(paths.server, ['lintserver', 'traceur']);
+  gulp.watch(paths.server, ['lintserver', 'traceur', 'traceur-test']);
   gulp.watch(paths.client, ['lintclient']);
   gulp.watch(paths.client, ['buildJs']);
   gulp.watch('./public/less/**/*.less', ['buildCss']);

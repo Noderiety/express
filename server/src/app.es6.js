@@ -17,7 +17,7 @@ let express = require('express'),
 
 class App {
   constructor (config) {
-    let app = this.app = express();
+    let server = this.server = express();
 
     this.config = config;
 
@@ -41,12 +41,12 @@ class App {
     /**
      * Express configuration.
      */
-    app.set('port', config.server.port);
-    app.engine('hbs', hbs.express3());
-    app.set('views', path.join(__dirname, '..', 'views'));
-    app.set('view engine', 'hbs');
+    server.set('port', config.server.port);
+    server.engine('hbs', hbs.express3());
+    server.set('views', path.join(__dirname, '..', 'views'));
+    server.set('view engine', 'hbs');
 
-    app
+    server
       .use(compress())
       .use(favicon())
       .use(logger('dev'))
@@ -58,18 +58,16 @@ class App {
         res.status(404).render('404', {title: 'Not Found :('});
       });
 
-    if (app.get('env') === 'development') {
-      app.use(errorHandler());
+    if (server.get('env') === 'development') {
+      server.use(errorHandler());
     }
   }
 
   initialize() {
     return p.all([
-        mongoDriver.initialize(this.config.database),
-        this.app.promise.listen(this.app.get('port'))
-      ])
-      .then(() => console.log('Express server listening on port ' + this.app.get('port')))
-      .done();
+      mongoDriver.initialize(this.config.database),
+      this.server.promise.listen(this.server.get('port'))
+    ]);
   }
 }
 

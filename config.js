@@ -4,7 +4,7 @@ var config = {
       port: 3000,
     },
     database: {
-      url: 'mongodb://localhost/express-simple_dev'
+      url: 'mongodb://localhost/noderiety'
     }
   },
   testing: {
@@ -12,7 +12,7 @@ var config = {
       port: 3001
     },
     database: {
-      url: 'mongodb://localhost/express-simple_test'
+      url: 'mongodb://localhost/noderiety'
     }
   },
   production: {
@@ -20,7 +20,7 @@ var config = {
       port: 8080
     },
     database: {
-      url: 'mongodb://localhost/express-simple'
+      url: 'mongodb://localhost/noderiety'
     }
   }
 };

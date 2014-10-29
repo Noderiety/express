@@ -24,7 +24,7 @@ function post(req, res) {
 }
 
 function list(req, res) {
-  Thread.find().exec()
+  Thread.promise.find()
     .then((threads) => res.send(threads))
     .done();
 }
@@ -36,7 +36,7 @@ function show(req, res) {
   Thread.promise.findOne({title: title})
     .then((thread) => {
       return Post.promise.find({thread: thread._id})
-        .then((posts) => res.send([{thread: thread, posts: posts}]));
+        .then((posts) => res.send({thread: thread, posts: posts}));
     })
     .done();
 }
