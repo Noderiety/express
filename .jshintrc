@@ -14,11 +14,12 @@
   "quotmark": "single",
   "regexp": true,
   "undef": true,
-  "unused": true,
+  "unused": "vars",
   "trailing": true,
   "smarttabs": true,
   "white": true,
   "globals": {
-    "jQuery": true
+    "jQuery": true,
+    "Promise"   : true
   }
 }

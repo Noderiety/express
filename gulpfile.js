@@ -15,14 +15,14 @@ var gulp = require('gulp'),
     rc = require('rc'),
     _ = require('lodash'),
     tracuerConfig = _.omit(rc('traceur'), ['config', '_']),
-    srcDir = 'src',
-    srcFiles = srcDir + '/*.es6.js',
-    destDir = 'dist',
+    // srcDir = './server/',
+    srcFiles = './server/src/**/*.es6.js',
+    destDir = './server/lib/',
     traceurStackTraceMapInjection = 'require(\'traceur-source-maps\').install(require(\'traceur\'));';
 
 // config to hold the path files
 var paths = {
-  server: ['./server/**/*.js', 'index.js', 'config.js'],
+  server: ['./server/src/**/*.js', 'index.js', 'config.js'],
   client: ['./public/js/**/*.js', '!./public/js/**/*.min.js']
 };
 
@@ -111,7 +111,7 @@ gulp.task('traceur', function () {
 
 // Watch the various files and runs their respective tasks
 gulp.task('watch', function () {
-  gulp.watch(paths.server, ['lintserver']);
+  gulp.watch(paths.server, ['lintserver', 'traceur']);
   gulp.watch(paths.client, ['lintclient']);
   gulp.watch(paths.client, ['buildJs']);
   gulp.watch('./public/less/**/*.less', ['buildCss']);
