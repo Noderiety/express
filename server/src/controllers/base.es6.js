@@ -9,7 +9,11 @@ let ObjectId = require('mongoose').Types.ObjectId,
     Post = require('../models/post');
 
 function thread(req, res) {
-  new Thread({title: req.param('title'), author: req.param('author')}).promise.save()
+  new Thread({
+      title: req.param('title'),
+      author: req.param('author')
+    })
+    .promise.save()
     .then(() => res.end('Okay'))
     .done();
 }
@@ -18,7 +22,11 @@ function post(req, res) {
   let threadId = new ObjectId(req.param('thread')),
       postValue = req.query.post;
 
-  new Post({thread: threadId, post: postValue}).promise.save()
+  new Post({
+      thread: threadId,
+      post: postValue
+    })
+    .promise.save()
     .then(() => res.end('Okay'))
     .done();
 }
