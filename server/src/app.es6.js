@@ -12,13 +12,13 @@ let express = require('express'),
     methodOverride = require('method-override'),
     p = require('songbird'),
     router = require('./middlewares/router'),
-    trycatchMiddleware = require('./middlewares/trycatch'),
-    databaseDriver;
-
+    handle404 = require('./middlewares/handle404'),
+    trycatchMiddleware = require('./middlewares/trycatch');
 
 class App {
-  configureSync(config) {
-    databaseDriver = require('./drivers/'+config.database.type);
+  configureSync() {
+    let DBDriver = require('./drivers/'+this.config.database.type);
+    this.databaseDriver = new DBDriver(this.config.database)
   }
 
   constructor (config) {
@@ -60,14 +60,12 @@ class App {
       .use(methodOverride())
       .use(express.static(path.join(__dirname, 'public')))
       .use(router())
-      .use(function (req, res) {
-        res.status(404).render('404', {title: 'Not Found :('});
-      });
+      .use(handle404());
   }
 
   initialize() {
     return p.all([
-      databaseDriver.initialize(this.config.database),
+      this.databaseDriver.initialize(),
       this.server.promise.listen(this.server.get('port'))
     ]);
   }

@@ -1,7 +1,7 @@
-var config = require('./config'),
+var trycatch = require('trycatch')
+    config = require('./config'),
     App = require('./server/lib/app'),
-    app = new App(config),
-    trycatch = require('trycatch');
+    app = new App(config);
 
 app.configureSync(config);
 
@@ -19,4 +19,9 @@ app.initialize()
 if (require.main !== module) {
 	module.exports = app;
 }
+
+// if (process.env.NODE_ENV !== 'production') {
+// 	// THIS MUST BE THE LAST LINE EXECUTED IN THE MAIN MODULE
+// 	return require('safeguards').noSynchronousIO(module);
+// }
 
