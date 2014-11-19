@@ -6,4 +6,8 @@ controllers.index = (req, res) => {
   });
 };
 
+controllers.error = (req, res) => {
+	process.nextTick(() => {throw new Error('fail')})
+};
+
 module.exports = controllers;

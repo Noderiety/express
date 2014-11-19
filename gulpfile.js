@@ -112,20 +112,6 @@ gulp.task('traceur', function () {
     .pipe(gulp.dest(destDir));
 });
 
-gulp.task('traceur-test', function () {
-  return gulp.src(testSrcFiles)
-    .pipe(changed(testDestDir))
-    .pipe(insert.prepend(traceurStackTraceMapInjection))
-    .pipe(sourcemaps.init())
-    .pipe(traceur(traceurConfig))
-    .pipe(rename(function (path) {
-      // Remove .es6 extension
-      path.basename = path.basename.split('.').slice(0,-1).join('.');
-    }))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest(testDestDir));
-});
-
 // Currently broken, server EADDRINUSE
 gulp.task('nodemon', function () {
   nodemon({ script: './index.js', ext: 'hbs js', ignore: ['ignored.js'] })
@@ -137,7 +123,7 @@ gulp.task('nodemon', function () {
 
 // Watch the various files and runs their respective tasks
 gulp.task('watch', function () {
-  gulp.watch(paths.server, ['lintserver', 'traceur', 'traceur-test']);
+  gulp.watch(paths.server, ['lintserver', 'traceur']);
   gulp.watch(paths.client, ['lintclient']);
   gulp.watch(paths.client, ['buildJs']);
   gulp.watch('./public/less/**/*.less', ['buildCss']);
@@ -150,4 +136,4 @@ gulp.task('watch', function () {
 gulp.task('lint', ['lintserver', 'lintclient']);
 gulp.task('buildCss', ['less', 'css', 'concatCss']);
 gulp.task('buildJs', ['uglify', 'concatJs']);
-gulp.task('default', ['lint', 'buildCss', 'buildJs', 'watch']);
+gulp.task('default', ['lint', 'buildCss', 'buildJs', 'nodemon', 'watch']);

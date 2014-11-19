@@ -26,9 +26,9 @@ describe('Routes', () => {
         .expect((res) => {
           res.body.should.be.an('array');
           let thread = res.body[0];
-          thread.should.have.property('title');
-          thread.should.have.property('author');
-          thread.should.have.property('title');
+          thread.should.have.a.property('title').and.should.be.a.string;
+          thread.should.have.a.property('author');
+          thread.should.have.a.property('postdate');
         })
         .expect(200, done);
     });
@@ -39,12 +39,12 @@ describe('Routes', () => {
     before(() => {
       // Setup your DB connection
       // dbConnection = mongoose.connect(...)
-      console.log('before');
+      // console.log('before');
     });
     beforeEach(() => console.log('beforeEach'));
     after(() => {
       // dbConnection.close(done)
-      console.log('after');
+      // console.log('after');
     });
     afterEach(() => console.log('afterEach'));
 
@@ -66,7 +66,7 @@ describe('Routes', () => {
             post.should.have.property('date');
           });
         })
-        .expect(200);
+        .expect(200, done);
     });
   });
 });
