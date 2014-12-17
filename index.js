@@ -1,7 +1,7 @@
 var cluster = require('cluster'),
 		numCPUs = require('os').cpus().length,
     config = require('./config'),
-    App = require('./server/lib/app'),
+    App = require('./server/dist/app'),
     app = new App(config)
 
 require('trycatch')

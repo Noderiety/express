@@ -18,9 +18,9 @@ var gulp = require('gulp'),
     traceurConfig = _.omit(rc('traceur'), ['config', '_']),
     // srcDir = './server/',
     srcFiles = './server/src/**/*.es6.js',
-    destDir = './server/lib/',
+    destDir = './server/dist/',
     testSrcFiles = './test/src/**/*.es6.js',
-    testDestDir = './test/lib/',
+    testDestDir = './test/dist/',
     traceurStackTraceMapInjection = 'require(\'traceur-source-maps\').install(require(\'traceur\'));';
 
 // config to hold the path files

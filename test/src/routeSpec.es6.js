@@ -1,4 +1,5 @@
-/*global describe, it, before, beforeEach, after, afterEach*/
+/* global describe, it, before, beforeEach, after, afterEach */
+/* jshint expr: true */
 let superagent = require('supertest'),
     _ = require('lodash'),
     app = require('../../index');
