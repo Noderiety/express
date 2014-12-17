@@ -18,6 +18,7 @@
   "trailing": true,
   "smarttabs": true,
   "white": true,
+  "asi": true,
   "globals": {
     "jQuery": true,
     "Promise"   : true
