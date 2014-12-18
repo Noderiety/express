@@ -2,8 +2,11 @@
  * Module dependencies.
  */
 
-let express = require('express'),
-    path = require('path'),
+// Core modules
+let path = require('path'),
+
+    // node_modules
+    express = require('express'),
     hbs = require('express-hbs'),
     logger = require('morgan'),
     bodyParser = require('body-parser'),
@@ -11,6 +14,8 @@ let express = require('express'),
     favicon = require('static-favicon'),
     methodOverride = require('method-override'),
     p = require('songbird'),
+
+    // local dependencies
     router = require('./middlewares/router'),
     handle404 = require('./middlewares/handle404'),
     trycatchMiddleware = require('./middlewares/trycatch');
@@ -47,6 +52,8 @@ class App {
      * Express configuration.
      */
     server.set('port', config.server.port);
+
+    // Configure view rendering engine
     server.engine('hbs', hbs.express3());
     server.set('views', path.join(__dirname, '..', 'views'));
     server.set('view engine', 'hbs');
@@ -58,7 +65,7 @@ class App {
       .use(logger('dev'))
       .use(bodyParser())
       .use(methodOverride())
-      .use(express.static(path.join(__dirname, 'public')))
+      .use(express.static(path.join(__dirname, '..', '..', 'public')))
       .use(router())
       .use(handle404());
   }

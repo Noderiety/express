@@ -98,7 +98,7 @@ gulp.task('concatCss', function () {
 });
 
 // Transpile ES6 => ES5
-gulp.task('traceur', function () {
+gulp.task('traceur-server', function () {
   return gulp.src(srcFiles)
     .pipe(changed(destDir))
     .pipe(insert.prepend(traceurStackTraceMapInjection))
@@ -110,6 +110,21 @@ gulp.task('traceur', function () {
     }))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(destDir));
+});
+
+// Transpile ES6 => ES5
+gulp.task('traceur-test', function () {
+  return gulp.src(testSrcFiles)
+    .pipe(changed(testDestDir))
+    .pipe(insert.prepend(traceurStackTraceMapInjection))
+    .pipe(sourcemaps.init())
+    .pipe(traceur(traceurConfig))
+    .pipe(rename(function (path) {
+      // Remove .es6 extension
+      path.basename = path.basename.split('.').slice(0,-1).join('.');
+    }))
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest(testDestDir));
 });
 
 // Currently broken, server EADDRINUSE
@@ -133,6 +148,8 @@ gulp.task('watch', function () {
     .pipe(livereload());
 });
 
+
+gulp.task('traceur', ['traceur-server', 'traceur-test']);
 gulp.task('lint', ['lintserver', 'lintclient']);
 gulp.task('buildCss', ['less', 'css', 'concatCss']);
 gulp.task('buildJs', ['uglify', 'concatJs']);

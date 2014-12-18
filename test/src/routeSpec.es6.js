@@ -11,6 +11,10 @@ function request() {
 }
 
 describe('Routes', () => {
+  before(() => {
+    return app.initialize()
+  })
+
   describe('GET /', () => {
     it('should return 200', (done) => {
       request()

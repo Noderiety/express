@@ -8,6 +8,7 @@ let ObjectId = require('mongoose').Types.ObjectId,
     Thread = require('../models/thread'),
     Post = require('../models/post');
 
+// GET /thread/:title
 function thread(req, res) {
   new Thread({
       title: req.param('title'),
@@ -15,6 +16,13 @@ function thread(req, res) {
     })
     .promise.save()
     .then(() => res.end('Okay'))
+    .done();
+}
+
+// GET /thread
+function list(req, res) {
+  Thread.promise.find()
+    .then((threads) => res.send(threads))
     .done();
 }
 
@@ -28,12 +36,6 @@ function post(req, res) {
     })
     .promise.save()
     .then(() => res.end('Okay'))
-    .done();
-}
-
-function list(req, res) {
-  Thread.promise.find()
-    .then((threads) => res.send(threads))
     .done();
 }
 

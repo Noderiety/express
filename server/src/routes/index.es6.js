@@ -1,14 +1,15 @@
 let controllers = require('../controllers/'),
-    basicAuth = require('basic-auth-connect'),
-    authMiddleware = require('../middlewares/auth-mongo');
+    auth = require('../middlewares/auth-mongo'),
+    mustbe = require('../lib/mustbe').routeHelpers()
 
 module.exports = function(router) {
-  let auth = basicAuth(authMiddleware());
-
-  router.all('/', controllers.index);
+  router.all('/', controllers.index)
   router.all('/error', controllers.error)
-  router.post('/post', auth, controllers.base.post);
-  router.get('/thread/:title', controllers.base.show);
-  router.get('/thread', controllers.base.list);
-  router.post('/thread', auth, controllers.base.thread);
-};
+
+  router.get('/thread/:title', controllers.base.show)
+  router.get('/thread', controllers.base.list)
+  router.get('/authorized', auth, controllers.authorized)
+
+  router.post('/post', auth, mustbe.authorized('post', controllers.base.post))
+  router.post('/thread', auth, mustbe.authorized('post', controllers.base.thread))
+}
