@@ -6,41 +6,18 @@
 */
 let ObjectId = require('mongoose').Types.ObjectId,
     Thread = require('../models/thread'),
-    Post = require('../models/post');
-
-// GET /thread/:title
-function thread(req, res) {
-  new Thread({
-      title: req.param('title'),
-      author: req.param('author')
-    })
-    .promise.save()
-    .then(() => res.end('Okay'))
-    .done();
-}
+    Post = require('../models/post')
 
 // GET /thread
-function list(req, res) {
+function list(req, res, cb) {
   Thread.promise.find()
     .then((threads) => res.send(threads))
-    .done();
+    .catch(cb);
 }
 
-function post(req, res) {
-  let threadId = new ObjectId(req.param('thread')),
-      postValue = req.query.post;
-
-  new Post({
-      thread: threadId,
-      post: postValue
-    })
-    .promise.save()
-    .then(() => res.end('Okay'))
-    .done();
-}
-
+// GET /thread/:title
 // first locates a thread by title, then locates the replies by thread ID.
-function show(req, res) {
+function show(req, res, cb) {
   let title = req.param('title');
 
   Thread.promise.findOne({title: title})
@@ -48,13 +25,53 @@ function show(req, res) {
       return Post.promise.find({thread: thread._id})
         .then((posts) => res.send({thread: thread, posts: posts}));
     })
-    .done();
+    .catch(cb);
+}
+
+function getPost(req, res, cb) {
+  let id = req.param('id')
+
+  Post.promise.findOne({_id: id})
+    .then(post => res.send(post))
+    .catch(cb)
+}
+
+// POST /thread
+function thread(req, res, cb) {
+  new Thread({
+      title: req.param('title'),
+      author: req.param('author')
+    })
+    .promise.save()
+    .then(() => res.end('Okay'))
+    .catch(cb);
+}
+
+function post(req, res, cb) {
+  let threadId = new ObjectId(req.param('thread')),
+      postValue = req.param('post');
+
+  new Post({
+      thread: threadId,
+      post: postValue
+    })
+    .promise.save()
+    .then(() => res.end('Okay'))
+    .catch(cb);
 }
 
 module.exports = {
-  post: post,
-  list: list,
   show: show,
-  thread: thread
+  list: list,
+  getPost: getPost,
+  thread: thread,
+  post: post
 };
+
+if (process.env.NODE_ENV === 'testing') {
+  _.extend(module.exports, {
+    someInternalFunction: someInternalFunction
+  })
+}
+
 

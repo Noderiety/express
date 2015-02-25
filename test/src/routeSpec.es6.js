@@ -1,10 +1,15 @@
 /* global describe, it, before, beforeEach, after, afterEach */
 /* jshint expr: true */
+console.log(process.env.NODE_ENV)
+
 let superagent = require('supertest'),
     _ = require('lodash'),
-    app = require('../../index');
+    app = require('../../index'),
+    chai = require('chai'),
+    sinon = require('sinon')
 
-require('chai').should();
+chai.should();
+chai.use(require('chai-datetime'));
 
 function request() {
   return superagent(app.server);
@@ -29,14 +34,36 @@ describe('Routes', () => {
         .get('/thread')
         .expect('Content-Type', /json/)
         .expect((res) => {
-          res.body.should.be.an('array');
-          let thread = res.body[0];
-          thread.should.have.a.property('title').and.should.be.a.string;
-          thread.should.have.a.property('author');
-          thread.should.have.a.property('postdate');
+          let threads = res.body
+          _.each(threads, (thread) => {
+            thread.should.have.a.property('title').and.should.be.a.string;
+            thread.should.have.a.property('author');
+            thread.should.have.a.property('postdate');
+            isNaN(Date.parse(thread.postdate)).should.be.false
+          })
         })
         .expect(200, done);
     });
+
+    it.only('spy', () => {
+      let object = { method: () => {} };
+      let spy = sinon.spy(fs, 'readFile');
+
+      // spy.withArgs(42);
+      // spy.withArgs(1);
+
+      object.method(42);
+      object.method(42);
+      object.method(42);
+      object.method(42);
+      object.method(42);
+      object.method(1);
+
+      console.log('spy.withArgs(1).calledOnce: ', spy.withArgs(1).calledOnce)
+
+      spy.callCount.should.equal(0)
+      spy.withArgs(1).calledOnce.should.be.true
+    })
   });
   describe('GET /thread/:title', () => {
     // let dbConnection;

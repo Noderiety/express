@@ -7,6 +7,7 @@ function requestErrorHandler(err, req, res, next) {
 
 function trycatchMiddleware() {
 	return (req, res, next) => {
+    console.log('adding trycatch')
 		trycatch(next, (err) => {
       requestErrorHandler(err, req, res, next);
     });

@@ -8,6 +8,7 @@ module.exports = function(router) {
 
   router.get('/thread/:title', controllers.base.show)
   router.get('/thread', controllers.base.list)
+  router.get('/post/:id', controllers.base.getPost)
   router.get('/authorized', auth, controllers.authorized)
 
   router.post('/post', auth, mustbe.authorized('post', controllers.base.post))

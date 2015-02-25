@@ -1,15 +1,14 @@
 var cluster = require('cluster'),
 		numCPUs = require('os').cpus().length,
-    trycatch = require('trycatch'),
+    // trycatch = require('trycatch'),
     config = require('./config'),
     App = require('./server/dist/app'),
     app = new App(config)
 
-require('trycatch')
 app.configureSync(config)
 
 if (process.env.NODE_ENV !== 'production') {
-	trycatch.configure({'long-stack-traces': true})
+	// trycatch.configure({'long-stack-traces': true})
 }
 
 if (require.main !== module) {
